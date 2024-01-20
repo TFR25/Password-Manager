@@ -9,6 +9,14 @@ LIGHT = "#C2C1E0"
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
+def save():
+    website = website_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+    with open("Sunshine", mode="a") as file:
+        contents = file.write(f"{website} | {email} | {password}")
+    return contents
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -40,10 +48,10 @@ password_label.grid(row=3, column=0)
 password_entry = Entry(width=31, bg=LIGHT)
 password_entry.grid(row=3, column=1)
 
-password_generator_button = Button(text="Generate Password",  fg=BLUE)
+password_generator_button = Button(text="Generate Password", fg=BLUE)
 password_generator_button.grid(row=3, column=2, padx=5)
 
-save_button = Button(text="Save", width=43, fg=BLUE)
+save_button = Button(text="Save", width=43, fg=BLUE, command=save)
 save_button.grid(row=4, column=1, columnspan=3, padx=5, pady=3)
 
 window.mainloop()
