@@ -14,7 +14,10 @@ def save():
     email = email_entry.get()
     password = password_entry.get()
     with open("Sunshine", mode="a") as file:
-        contents = file.write(f"{website} | {email} | {password}")
+        contents = file.write(f"{website} | {email} | {password}\n")
+    website_entry.delete(0, END)
+    email_entry.delete(0, END)
+    password_entry.delete(0, END)
     return contents
 
 
