@@ -1,5 +1,6 @@
 from tkinter import *
-import random
+from random import choice, randint, shuffle
+from tkinter import messagebox
 
 FONT_NAME = "Courier"
 
@@ -10,7 +11,7 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
            'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
            'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+', '@', '=', '-', '_', '.', '^']
 
 password_list = []
 
@@ -18,20 +19,18 @@ password_list = []
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 def generate_password():
-    for char in range(4):
-        password_list.append(random.choice(letters))
-        password_list.append(random.choice(numbers))
-        password_list.append(random.choice(symbols))
+    for char in range(randint(4,8)):
+        password_list.append(choice(letters))
+        password_list.append(choice(numbers))
+        password_list.append(choice(symbols))
 
 
 generate_password()
 
 
 def shuffle_password():
-    random.shuffle(password_list)
-    rand_password = ""
-    for char in password_list:
-        rand_password += char
+    shuffle(password_list)
+    rand_password = "".join(password_list)
     password_entry.insert(END, rand_password)
 
 
@@ -40,12 +39,21 @@ def save():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
-    with open("Sunshine", mode="a") as file:
-        contents = file.write(f"{website} | {email} | {password}\n")
-    website_entry.delete(0, END)
-    email_entry.delete(0, END)
-    password_entry.delete(0, END)
-    return contents
+
+    if len(website) == 0 or len(email) == 0 or len(password) == 0:
+        messagebox.showwarning(title="Warning", message="Empty fields not allowed.")
+
+    else:
+        is_ok = messagebox.askokcancel(title=website,
+                                       message=f"Please review your information.\nWebsite: {website} \nEmail: "
+                                               f"{email} \nPassword: {password}\nWould "
+                                               f"you like to save this information? ")
+        if is_ok:
+            with open("Sunshine", mode="a") as file:
+                file.write(f"Website: {website} | Email: {email} | Password: {password}\n")
+                website_entry.delete(0, END)
+                email_entry.delete(0, END)
+                password_entry.delete(0, END)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
