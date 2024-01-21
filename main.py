@@ -1,6 +1,7 @@
 from tkinter import *
 from random import choice, randint, shuffle
 from tkinter import messagebox
+import pyperclip
 
 FONT_NAME = "Courier"
 
@@ -31,6 +32,7 @@ generate_password()
 def shuffle_password():
     shuffle(password_list)
     rand_password = "".join(password_list)
+    pyperclip.copy(rand_password)
     password_entry.insert(END, rand_password)
 
 
