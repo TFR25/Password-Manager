@@ -2,6 +2,7 @@ from tkinter import *
 from random import choice, randint, shuffle
 from tkinter import messagebox
 import pyperclip
+import json
 
 FONT_NAME = "Courier"
 
@@ -20,7 +21,7 @@ password_list = []
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 def generate_password():
-    for char in range(randint(4,8)):
+    for char in range(randint(4, 8)):
         password_list.append(choice(letters))
         password_list.append(choice(numbers))
         password_list.append(choice(symbols))
@@ -41,6 +42,12 @@ def save():
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+    }
 
     if len(website) == 0 or len(email) == 0 or len(password) == 0:
         messagebox.showwarning(title="Warning", message="Empty fields not allowed.")
@@ -51,11 +58,26 @@ def save():
                                                f"{email} \nPassword: {password}\nWould "
                                                f"you like to save this information? ")
         if is_ok:
-            with open("Sunshine", mode="a") as file:
-                file.write(f"Website: {website} | Email: {email} | Password: {password}\n")
+            try:
+                with open("Sunshine.json", mode="r") as data_file:
+                    data = json.load(data_file)
+            except FileNotFoundError:
+                with open("Sunshine.json", mode="w") as data_file:
+                    json.dump(new_data, data_file, indent=4)
+            except json.decoder.JSONDecodeError:
+                with open("Sunshine.json", "w") as data_file:
+                    json.dump(new_data, data_file, indent=4)
+            else:
+                data.update(new_data)
+                with open("Sunshine.json", mode="w") as data_file:
+                    json.dump(data, data_file, indent=4)
+            finally:
                 website_entry.delete(0, END)
                 email_entry.delete(0, END)
                 password_entry.delete(0, END)
+
+
+# ----------------------------- SEARCH -------------------------------- #
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -93,5 +115,12 @@ password_generator_button.grid(row=3, column=2, padx=5)
 
 save_button = Button(text="Save", width=43, fg=BLUE, command=save)
 save_button.grid(row=4, column=1, columnspan=3, padx=5, pady=3)
+
+
+def next_event(event):
+    email_entry.focus()
+
+
+window.bind('<Return>', next_event)
 
 window.mainloop()
