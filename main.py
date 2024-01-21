@@ -1,12 +1,39 @@
 from tkinter import *
+import random
 
 FONT_NAME = "Courier"
 
 BLUE = "#25236b"
 LIGHT = "#C2C1E0"
 
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+           'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+           'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+password_list = []
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+
+def generate_password():
+    for char in range(4):
+        password_list.append(random.choice(letters))
+        password_list.append(random.choice(numbers))
+        password_list.append(random.choice(symbols))
+
+
+generate_password()
+
+
+def shuffle_password():
+    random.shuffle(password_list)
+    rand_password = ""
+    for char in password_list:
+        rand_password += char
+    password_entry.insert(END, rand_password)
+
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
@@ -51,7 +78,7 @@ password_label.grid(row=3, column=0)
 password_entry = Entry(width=31, bg=LIGHT)
 password_entry.grid(row=3, column=1)
 
-password_generator_button = Button(text="Generate Password", fg=BLUE)
+password_generator_button = Button(text="Generate Password", fg=BLUE, command=shuffle_password)
 password_generator_button.grid(row=3, column=2, padx=5)
 
 save_button = Button(text="Save", width=43, fg=BLUE, command=save)
