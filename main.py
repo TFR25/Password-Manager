@@ -65,7 +65,7 @@ def save():
                 with open("Sunshine.json", mode="w") as data_file:
                     json.dump(new_data, data_file, indent=4)
             except json.decoder.JSONDecodeError:
-                with open("Sunshine.json", "w") as data_file:
+                with open("Sunshine.json", mode="w") as data_file:
                     json.dump(new_data, data_file, indent=4)
             else:
                 data.update(new_data)
@@ -78,6 +78,22 @@ def save():
 
 
 # ----------------------------- SEARCH -------------------------------- #
+def search():
+    website = website_entry.get()
+    try:
+        with open("Sunshine.json", mode="r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No Data File Found.")
+    except json.decoder.JSONDecodeError:
+        messagebox.showwarning(title="Error", message="File Empty.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showwarning(title="Error", message=f"No information found for {website}.")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -94,9 +110,12 @@ canvas.create_image(100, 100, image=lock_image)
 website_label = Label(text="Website:", font=(FONT_NAME, 16, "bold"), bg=BLUE, fg=LIGHT)
 website_label.grid(row=1, column=0)
 
-website_entry = Entry(width=51, bg=LIGHT)
+website_entry = Entry(width=31, bg=LIGHT)
 website_entry.focus()
-website_entry.grid(row=1, column=1, columnspan=2, padx=5)
+website_entry.grid(row=1, column=1, padx=5)
+
+search_button = Button(text="Search", width=14, fg=BLUE, command=search)
+search_button.grid(row=1, column=2, columnspan=2)
 
 email_label = Label(text="Email/Username:", font=(FONT_NAME, 16, "bold"), bg=BLUE, fg=LIGHT)
 email_label.grid(row=2, column=0)
